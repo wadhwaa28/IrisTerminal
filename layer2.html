@@ -5,31 +5,45 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Layer 2</title>
     <style>
-        #qrCode {
-            display: none; /* Hide QR code initially */
+        #qrCodeContainer {
+            display: none; /* Hide QR code and 4-digit input initially */
             margin-top: 20px;
         }
     </style>
     <script>
-        function checkCode() {
-            const code = document.getElementById("code").value;
-            if (code === "92746") {
-                document.getElementById("qrCode").style.display = "block"; // Show QR code if correct
+        function checkFiveDigitCode() {
+            const fiveDigitCode = document.getElementById("fiveDigitCode").value;
+            if (fiveDigitCode === "73420") {
+                document.getElementById("qrCodeContainer").style.display = "block"; // Show both QR code and 4-digit input if correct
             } else {
-                alert("Incorrect code."); // Alert for incorrect code
+                alert("Incorrect 5-digit code. Please try again."); // Alert for incorrect code
+            }
+        }
+
+        function checkFourDigitCode() {
+            const fourDigitCode = document.getElementById("fourDigitCode").value;
+            if (fourDigitCode === "2649") {
+                // Redirect to Layer 3 when the correct 4-digit code is entered
+                window.location.href = "layer3.html";
+            } else {
+                alert("Incorrect 4-digit code. Please try again."); // Alert for incorrect code
             }
         }
     </script>
 </head>
 <body>
     <h1>Layer 2</h1>
-    <p>Please enter the 5-digit code to view the QR code:</p>
-    <input type="text" id="code" placeholder="Enter 5-digit code" maxlength="5">
-    <button onclick="checkCode()">Submit</button>
+    <p>Please enter the 5-digit code</p>
     
-    <div id="qrCode">
+    <input type="text" id="fiveDigitCode" placeholder="Enter 5-digit code" maxlength="5">
+    <button onclick="checkFiveDigitCode()">Submit</button>
+    
+    <div id="qrCodeContainer">
         <h2>Your QR Code:</h2>
-        <a href="layer3.html" target="_blank"> <!-- Link to Layer 3 -->
+        <input type="text" id="fourDigitCode" placeholder="Enter 4-digit code" maxlength="4">
+        <button onclick="checkFourDigitCode()">Submit</button>
+        <br><br>
+        <a href="layer3.html" target="_blank" rel="noopener noreferrer">
             <img src="your-qr-code-image.png" alt="QR Code" />
         </a>
     </div>
