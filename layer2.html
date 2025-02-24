@@ -3,10 +3,35 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Layer 1</title>
+    <title>Layer 2</title>
+    <style>
+        #qrCode {
+            display: none; /* Hide QR code initially */
+            margin-top: 20px;
+        }
+    </style>
+    <script>
+        function checkCode() {
+            const code = document.getElementById("code").value;
+            if (code === "92746") {
+                document.getElementById("qrCode").style.display = "block"; // Show QR code if correct
+            } else {
+                alert("Incorrect code."); // Alert for incorrect code
+            }
+        }
+    </script>
 </head>
 <body>
     <h1>Layer 2</h1>
-    <a href="layer3.html">Proceed to Layer 3</a>
+    <p>Please enter the 5-digit code to view the QR code:</p>
+    <input type="text" id="code" placeholder="Enter 5-digit code" maxlength="5">
+    <button onclick="checkCode()">Submit</button>
+    
+    <div id="qrCode">
+        <h2>Your QR Code:</h2>
+        <a href="layer3.html" target="_blank"> <!-- Link to Layer 3 -->
+            <img src="your-qr-code-image.png" alt="QR Code" />
+        </a>
+    </div>
 </body>
 </html>
