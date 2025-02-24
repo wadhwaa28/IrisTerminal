@@ -1,0 +1,24 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>shutdown.exe</title>
+</head>
+<body>
+    <h1>Emergency Kill Button</h1>
+    <button id="killButton">SHUTDOWN</button>
+    <audio id="alertSound" src="your-audio-file.mp3"></audio>
+
+    <script>
+        document.getElementById("killButton").onclick = function() {
+            var audio = document.getElementById("alertSound");
+            audio.play();
+            setTimeout(function() {
+                alert("Protocol Complete"); // Simulate crash with alert
+                window.location.href = "about:blank"; // Redirect to blank page
+            }, 10000); // Wait for 10 seconds
+        };
+    </script>
+</body>
+</html>
