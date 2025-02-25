@@ -3,10 +3,161 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Layer 6</title>
+    <title>Layer 6 - Terminal</title>
+    <style>
+        body {
+            background-color: #1e1e1e; /* Dark background */
+            color: #00ff00; /* Green text */
+            font-family: 'Courier New', Courier, monospace; /* Monospace font */
+            padding: 20px;
+            margin: 0;
+            height: 100vh;
+            overflow: hidden;
+        }
+        .terminal {
+            border: 1px solid #00ff00; /* Green border */
+            padding: 10px;
+            height: auto;
+            max-height: 80%; /* Limit height for scrolling */
+            overflow-y: auto; /* Allow scrolling */
+        }
+        button {
+            background-color: #00ff00; /* Green button */
+            color: #1e1e1e; /* Dark text */
+            border: none; /* No border */
+            padding: 10px 20px;
+            cursor: pointer; /* Pointer cursor */
+            font-size: 16px; /* Increased font size */
+        }
+        button:hover {
+            background-color: #007700; /* Darken button on hover */
+        }
+        input {
+            background-color: #1e1e1e; /* Match background */
+            color: #00ff00; /* Green text */
+            border: none; /* No border */
+            border-bottom: 1px solid #00ff00; /* Underline effect */
+            outline: none; /* Remove outline */
+            margin: 5px 0; /* Space above and below */
+        }
+        #biometricContainer, #thirdPasswordContainer {
+            display: none; /* Hide sections initially */
+            margin-top: 10px;
+        }
+        #video {
+            display: none; /* Hide video initially */
+            width: 100%; /* Full width */
+            border: 1px solid #00ff00; /* Green border */
+        }
+        #resultMessage {
+            margin-top: 10px; /* Space above result message */
+        }
+    </style>
+    <script>
+        const expectedPassword = "@3e5ghK9"; // Example of a complex password
+        const expectedSecondaryPassword = "87fg@2$0"; // Example of a second password
+        const expectedHandImageSrc = "expected_hand_image.jpeg"; // Path to the expected hand image
+
+        function verifyPasswords() {
+            const primaryPassword = document.getElementById("password").value;
+            const secondaryPassword = document.getElementById("secondaryPassword").value;
+            if (primaryPassword === expectedPassword && secondaryPassword === expectedSecondaryPassword) {
+                document.getElementById("biometricContainer").style.display = "block"; // Show biometric options
+            } else {
+                alert("Incorrect primary or secondary password. Please try again.");
+            }
+        }
+
+        function startCamera() {
+            const video = document.getElementById("video");
+            const constraints = {
+                video: true
+            };
+
+            navigator.mediaDevices.getUserMedia(constraints)
+                .then((stream) => {
+                    video.srcObject = stream;
+                    video.style.display = "block"; // Show video
+                    video.play();
+                })
+                .catch((error) => {
+                    alert("Unable to access the camera. Please check your permissions.");
+                });
+        }
+
+        function captureImage() {
+            const video = document.getElementById("video");
+            const canvas = document.createElement("canvas");
+            canvas.width = video.videoWidth;
+            canvas.height = video.videoHeight;
+
+            const context = canvas.getContext("2d");
+            context.drawImage(video, 0, 0, canvas.width, canvas.height);
+
+            const capturedImageSrc = canvas.toDataURL("image/png");
+            verifyImage(capturedImageSrc);
+        }
+
+        function uploadImage(event) {
+            const file = event.target.files[0];
+            const reader = new FileReader();
+
+            reader.onload = function (e) {
+                const uploadedImageSrc = e.target.result;
+                verifyImage(uploadedImageSrc);
+            };
+
+            reader.readAsDataURL(file);
+        }
+
+        function verifyImage(uploadedImageSrc) {
+            // Simulated image verification logic
+            if (uploadedImageSrc === expectedHandImageSrc) {
+                alert("Hand image verified! Please enter the password.");
+                document.getElementById("thirdPasswordContainer").style.display = "block"; // Show third password input
+            } else {
+                alert("Image verification failed. Please try again.");
+            }
+        }
+
+        function verifyThirdPassword() {
+            const thirdPassword = document.getElementById("thirdPassword").value;
+            // Example of a third password
+            if (thirdPassword === "D%T7ygU2$") { 
+                alert("Access Granted");
+                window.location.href = "kill.html"; // Redirect to kill.html
+            } else {
+                alert("Incorrect final password. Please try again.");
+            }
+        }
+    </script>
 </head>
 <body>
-    <h1>Layer 6</h1>
-    <a href="kill.html">FOR EMERGENCIES ONLY</a>
+    <div class="terminal">
+        <h1>Layer 6</h1>
+        <p>Welcome to Layer 6 - Hand Image Verification Required</p>
+        
+        <span>user@securelayers:~$</span>
+        <input type="password" id="password" placeholder="Enter Password">
+        <input type="password" id="secondaryPassword" placeholder="Enter Password">
+        <button onclick="verifyPasswords()">Submit Passwords</button>
+        
+        <div id="biometricContainer">
+            <p>Please choose an authentication method:</p>
+            <button onclick="startCamera()">Start Webcam</button>
+            <button onclick="document.getElementById('imageInput').click();">Upload Hand Image</button>
+            <input type="file" id="imageInput" accept="image/*" onchange="uploadImage(event)" style="display:none;">
+            <button onclick="captureImage()">Capture Image</button>
+            <video id="video"></video>
+        </div>
+
+        <div id="thirdPasswordContainer">
+            <p>Please enter the password:</p>
+            <input type="password" id="thirdPassword" placeholder="Enter Password">
+            <button onclick="verifyThirdPassword()">Submit Password</button>
+        </div>
+
+        <div id="resultMessage"></div>
+    </div>
 </body>
 </html>
