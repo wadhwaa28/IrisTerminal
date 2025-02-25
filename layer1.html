@@ -3,22 +3,64 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Layer 1</title>
+    <title>Layer 1 - Terminal</title>
+    <style>
+        body {
+            background-color: #1e1e1e; /* Dark background */
+            color: #00ff00; /* Green text */
+            font-family: 'Courier New', Courier, monospace; /* Monospace font */
+            padding: 20px;
+            margin: 0;
+            height: 100vh;
+            overflow: hidden;
+        }
+        .terminal {
+            border: 1px solid #00ff00; /* Green border */
+            padding: 10px;
+            height: 80%;
+            overflow-y: auto; /* Allow scrolling */
+        }
+        .prompt {
+            display: inline; /* Keep the prompt inline */
+        }
+        input {
+            background-color: #1e1e1e; /* Match background */
+            color: #00ff00; /* Green text */
+            border: none; /* No border */
+            border-bottom: 1px solid #00ff00; /* Underline effect */
+            outline: none; /* Remove outline */
+        }
+        button {
+            background-color: #00ff00; /* Green button */
+            color: #1e1e1e; /* Dark text */
+            border: none; /* No border */
+            padding: 5px 10px;
+            cursor: pointer; /* Pointer cursor */
+        }
+        button:hover {
+            background-color: #007700; /* Darken button on hover */
+        }
+    </style>
     <script>
         function checkPassword() {
             const password = document.getElementById("password").value;
             if (password === "775316") {
                 window.location.href = "layer2.html"; // Redirect to Layer 2 if password is correct
             } else {
-                alert("Incorrect password"); // Alert for incorrect password
+                alert("Incorrect password. Please try again."); // Alert for incorrect password
             }
         }
     </script>
 </head>
 <body>
-    <h1>Layer 1</h1>
-    <p>Please enter the password to continue to Layer 2:</p>
-    <input type="password" id="password" placeholder="Enter Password">
-    <button onclick="checkPassword()">Submit</button>
+    <div class="terminal">
+        <p>Layer 1: Password Required</p>
+        <p>Enter the password to proceed to Layer 2:</p>
+        <p>
+            <span class="prompt">user@securelayers:~$</span>
+            <input type="password" id="password" placeholder="Enter Password">
+            <button onclick="checkPassword()">Submit</button>
+        </p>
+    </div>
 </body>
 </html>
