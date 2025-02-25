@@ -3,10 +3,107 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Layer 1</title>
+    <title>Layer 5 - Terminal</title>
+    <style>
+        body {
+            background-color: #1e1e1e; /* Dark background */
+            color: #00ff00; /* Green text */
+            font-family: 'Courier New', Courier, monospace; /* Monospace font */
+            padding: 20px;
+            margin: 0;
+            height: 100vh;
+            overflow: hidden;
+        }
+        .terminal {
+            border: 1px solid #00ff00; /* Green border */
+            padding: 10px;
+            height: auto;
+            max-height: 80%; /* Limit height for scrolling */
+            overflow-y: auto; /* Allow scrolling */
+        }
+        button {
+            background-color: #00ff00; /* Green button */
+            color: #1e1e1e; /* Dark text */
+            border: none; /* No border */
+            padding: 10px 20px;
+            cursor: pointer; /* Pointer cursor */
+            font-size: 16px; /* Increased font size */
+        }
+        button:hover {
+            background-color: #007700; /* Darken button on hover */
+        }
+        #video {
+            display: none; /* Hide video initially */
+            width: 100%; /* Full width */
+            border: 1px solid #00ff00; /* Green border */
+        }
+        #resultMessage {
+            margin-top: 10px; /* Space above result message */
+        }
+    </style>
+    <script>
+        const expectedImageSrc = "expected_eye_image.jpeg"; // Path to the expected image
+
+        function startCamera() {
+            const video = document.getElementById("video");
+            const constraints = {
+                video: true
+            };
+
+            navigator.mediaDevices.getUserMedia(constraints)
+                .then((stream) => {
+                    video.srcObject = stream;
+                    video.style.display = "block"; // Show video
+                    video.play();
+                })
+                .catch((error) => {
+                    alert("Unable to access the camera. Please check your permissions.");
+                });
+        }
+
+        function captureImage() {
+            const video = document.getElementById("video");
+            const canvas = document.createElement("canvas");
+            canvas.width = video.videoWidth;
+            canvas.height = video.videoHeight;
+
+            const context = canvas.getContext("2d");
+            context.drawImage(video, 0, 0, canvas.width, canvas.height);
+
+            const capturedImageSrc = canvas.toDataURL("image/png");
+            verifyImage(capturedImageSrc);
+        }
+
+        function verifyImage(capturedImageSrc) {
+            // Simulate image verification with variability considerations
+            const resultMessage = document.getElementById("resultMessage");
+
+            // Here you would implement actual image processing logic
+            // For simplicity, we will use a basic comparison method
+
+            // Simulated condition for success/failure based on variability
+            const isSimilar = Math.random() < 0.8; // Simulating variability handling (80% similarity)
+
+            if (isSimilar) {
+                alert("Image verified! Redirecting to Layer 6.");
+                window.location.href = "layer6.html"; // Redirect to Layer 6 on success
+            } else {
+                resultMessage.innerText = "Image verification failed. Please try again.";
+            }
+        }
+    </script>
 </head>
 <body>
-    <h1>Layer 5</h1>
-    <a href="layer6.html">Proceed to Layer 6</a>
+    <div class="terminal">
+        <h1>Layer 5</h1>
+        <p>Eye Scan Authentication Required</p>
+        
+        <span>user@securelayers:~$</span>
+        <button onclick="startCamera()">Start Webcam</button>
+        <button onclick="captureImage()">Capture Image</button>
+        
+        <video id="video"></video>
+        <div id="resultMessage"></div>
+    </div>
 </body>
 </html>
