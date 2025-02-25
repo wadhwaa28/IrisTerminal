@@ -108,13 +108,18 @@
             };
         }
 
-        function verifyImage(uploadedImageSrc) {
-            // Simulated image verification logic
-            if (uploadedImageSrc === expectedHandImageSrc) {
-                alert("Hand image verified! Please enter the password.");
+        function verifyImage(capturedImageSrc) {
+            // Simulate image verification with variability considerations
+            const resultMessage = document.getElementById("resultMessage");
+
+            // Simulated condition for success/failure based on variability
+            const isSimilar = Math.random() < 0.8; // Simulating variability handling (80% similarity)
+
+            if (isSimilar) {
+                alert("Image verified!");
                 document.getElementById("thirdPasswordContainer").style.display = "block"; // Show third password input
             } else {
-                alert("Image verification failed. Please try again.");
+                resultMessage.innerText = "Image verification failed. Please try again.";
             }
         }
 
