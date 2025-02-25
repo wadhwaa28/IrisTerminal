@@ -3,10 +3,62 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Layer 1</title>
+    <title>Layer 4 - Terminal</title>
+    <style>
+        body {
+            background-color: #1e1e1e; /* Dark background */
+            color: #00ff00; /* Green text */
+            font-family: 'Courier New', Courier, monospace; /* Monospace font */
+            padding: 20px;
+            margin: 0;
+            height: 100vh;
+            overflow: hidden;
+        }
+        .terminal {
+            border: 1px solid #00ff00; /* Green border */
+            padding: 10px;
+            height: auto;
+            max-height: 80%; /* Limit height for scrolling */
+            overflow-y: auto; /* Allow scrolling */
+        }
+        input {
+            background-color: #1e1e1e; /* Match background */
+            color: #00ff00; /* Green text */
+            border: none; /* No border */
+            border-bottom: 1px solid #00ff00; /* Underline effect */
+            outline: none; /* Remove outline */
+            margin-right: 5px; /* Space between inputs */
+        }
+        button {
+            background-color: #00ff00; /* Green button */
+            color: #1e1e1e; /* Dark text */
+            border: none; /* No border */
+            padding: 5px 10px;
+            cursor: pointer; /* Pointer cursor */
+        }
+        button:hover {
+            background-color: #007700; /* Darken button on hover */
+        }
+    </style>
+    <script>
+        function checkPassword() {
+            const password = document.getElementById("password").value;
+            if (password === "5y5t3m") { // Replace 'abcdef' with your chosen 6-character alphabetical password
+                window.location.href = "layer5.html"; // Redirect to Layer 5 upon successful entry
+            } else {
+                alert("Incorrect password. Please try again."); // Alert for incorrect password
+            }
+        }
+    </script>
 </head>
 <body>
-    <h1>Layer 4</h1>
-    <a href="layer5.html">Proceed to Layer 5</a>
+    <div class="terminal">
+        <h1>Layer 4</h1>
+        <p>Please enter the password to proceed:</p>
+        
+        <span>user@securelayers:~$</span>
+        <input type="text" id="password" placeholder="Enter 6-letter password" maxlength="6">
+        <button onclick="checkPassword()">Submit</button>
+    </div>
 </body>
 </html>
