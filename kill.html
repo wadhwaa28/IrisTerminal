@@ -5,7 +5,35 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>shutdown.exe</title>
 </head>
+    <style>
+        body {
+            background-color: #1e1e1e; /* Dark background */
+            color: #00ff00; /* Green text */
+            font-family: 'Courier New', Courier, monospace; /* Monospace font */
+            padding: 20px;
+            margin: 0;
+            height: 100vh;
+            overflow: hidden;
+        }
+        .terminal {
+            border: 1px solid #00ff00; /* Green border */
+            padding: 10px;
+            height: 80%;
+            overflow-y: auto; /* Allow scrolling */
+        }
+        button {
+            background-color: #00ff00; /* Green button */
+            color: #1e1e1e; /* Dark text */
+            border: none; /* No border */
+            padding: 5px 10px;
+            cursor: pointer; /* Pointer cursor */
+        }
+        button:hover {
+            background-color: #007700; /* Darken button on hover */
+        }
+    </style>
 <body>
+    <div id="terminal">
     <h1>Emergency Kill Button</h1>
     <button id="killButton">SHUTDOWN</button>
     <audio id="alertSound" src="iris_shutdown.mp3"></audio>
@@ -20,5 +48,6 @@
             }, 100); // Wait for 10 seconds
         };
     </script>
+    </div>
 </body>
 </html>
