@@ -74,12 +74,21 @@
             verifyImage(capturedImageSrc);
         }
 
+        function uploadImage(event) {
+            const file = event.target.files[0];
+            const reader = new FileReader();
+
+            reader.onload = function (e) {
+                const uploadedImageSrc = e.target.result;
+                verifyImage(uploadedImageSrc);
+            };
+
+            reader.readAsDataURL(file);
+        }
+
         function verifyImage(capturedImageSrc) {
             // Simulate image verification with variability considerations
             const resultMessage = document.getElementById("resultMessage");
-
-            // Here you would implement actual image processing logic
-            // For simplicity, we will use a basic comparison method
 
             // Simulated condition for success/failure based on variability
             const isSimilar = Math.random() < 0.8; // Simulating variability handling (80% similarity)
@@ -101,6 +110,10 @@
         <span>user@securelayers:~$</span>
         <button onclick="startCamera()">Start Webcam</button>
         <button onclick="captureImage()">Capture Image</button>
+        
+        <p>OR</p>
+        
+        <input type="file" id="imageInput" accept="image/*" onchange="uploadImage(event)">
         
         <video id="video"></video>
         <div id="resultMessage"></div>
