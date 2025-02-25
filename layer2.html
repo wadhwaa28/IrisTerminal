@@ -3,8 +3,42 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Layer 2</title>
+    <title>Layer 2 - Terminal</title>
     <style>
+        body {
+            background-color: #1e1e1e; /* Dark background */
+            color: #00ff00; /* Green text */
+            font-family: 'Courier New', Courier, monospace; /* Monospace font */
+            padding: 20px;
+            margin: 0;
+            height: 100vh;
+            overflow: hidden;
+        }
+        .terminal {
+            border: 1px solid #00ff00; /* Green border */
+            padding: 10px;
+            height: auto;
+            max-height: 80%; /* Limit height for scrolling */
+            overflow-y: auto; /* Allow scrolling */
+        }
+        input {
+            background-color: #1e1e1e; /* Match background */
+            color: #00ff00; /* Green text */
+            border: none; /* No border */
+            border-bottom: 1px solid #00ff00; /* Underline effect */
+            outline: none; /* Remove outline */
+            margin-right: 5px; /* Space between inputs */
+        }
+        button {
+            background-color: #00ff00; /* Green button */
+            color: #1e1e1e; /* Dark text */
+            border: none; /* No border */
+            padding: 5px 10px;
+            cursor: pointer; /* Pointer cursor */
+        }
+        button:hover {
+            background-color: #007700; /* Darken button on hover */
+        }
         #qrCodeContainer {
             display: none; /* Hide QR code and 4-digit input initially */
             margin-top: 20px;
@@ -32,20 +66,24 @@
     </script>
 </head>
 <body>
-    <h1>Layer 2</h1>
-    <p>Please enter the 5-digit code</p>
-    
-    <input type="text" id="fiveDigitCode" placeholder="Enter 5-digit code" maxlength="5">
-    <button onclick="checkFiveDigitCode()">Submit</button>
-    
-    <div id="qrCodeContainer">
-        <h2>Your QR Code:</h2>
-        <input type="text" id="fourDigitCode" placeholder="Enter 4-digit code" maxlength="4">
-        <button onclick="checkFourDigitCode()">Submit</button>
-        <br><br>
-        <a href="layer3.html" target="_blank" rel="noopener noreferrer">
-            <img src="qrcode_sites.google.com.png" alt="QR Code" />
-        </a>
+    <div class="terminal">
+        <h1>Layer 2</h1>
+        <p>Please enter the 5-digit code:</p>
+        
+        <span>user@securelayers:~$</span>
+        <input type="text" id="fiveDigitCode" placeholder="Enter 5-digit code" maxlength="5">
+        <button onclick="checkFiveDigitCode()">Submit</button>
+        
+        <div id="qrCodeContainer">
+            <h2>Your QR Code:</h2>
+            <span>user@securelayers:~$</span>
+            <input type="text" id="fourDigitCode" placeholder="Enter 4-digit code" maxlength="4">
+            <button onclick="checkFourDigitCode()">Submit</button>
+            <br><br>
+            <a href="layer3.html" target="_blank" rel="noopener noreferrer">
+                <img src="qrcode_sites.google.com.png" alt="QR Code" />
+            </a>
+        </div>
     </div>
 </body>
 </html>
