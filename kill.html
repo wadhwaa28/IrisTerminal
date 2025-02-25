@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>shutdown.exe</title>
+    <title>Terminal</title>
 </head>
     <style>
         body {
@@ -21,6 +21,14 @@
             height: 80%;
             overflow-y: auto; /* Allow scrolling */
         }
+        input {
+            background-color: #1e1e1e; /* Match background */
+            color: #00ff00; /* Green text */
+            border: none; /* No border */
+            border-bottom: 1px solid #00ff00; /* Underline effect */
+            outline: none; /* Remove outline */
+            margin-right: 5px; /* Space between inputs */
+        }
         button {
             background-color: #00ff00; /* Green button */
             color: #1e1e1e; /* Dark text */
@@ -31,13 +39,33 @@
         button:hover {
             background-color: #007700; /* Darken button on hover */
         }
+        #shutdown {
+            display: none;
+            margin-top: 20px;
+        }
     </style>
+    <script>
+    function checkTerminalValue() {
+    const terminalValue = document.getElementById("input").value;
+        if (terminalValue == "sys check --name") {
+            alert("$%~IrisAI~$%");
+        } else if (terminalValue == "sys exe --shutdown") {
+            document.getElementById("shutdown").style.display = "block";
+        } else {
+            alert("No terminal function");
+        }
+    }
+    </script>
 <body>
-    <div id="terminal">
-    <h1>Emergency Kill Button</h1>
-    <button id="killButton">SHUTDOWN</button>
-    <audio id="alertSound" src="iris_shutdown.mp3"></audio>
-
+    <div class="terminal">
+    <h1>Terminal</h1>
+        <span class="prompt">user@securelayers:~$</span>
+        <input type="password" id="input" placeholder="Enter command">
+        <button onclick="checkTerminalValue()">Submit</button>
+        <div id="shutdown">
+            <button id="killButton">SHUTDOWN</button>
+            <audio id="alertSound" src="iris_shutdown.mp3"></audio>
+        </div>
     <script>
         document.getElementById("killButton").onclick = function() {
             var audio = document.getElementById("alertSound");
