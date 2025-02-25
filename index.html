@@ -3,10 +3,43 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>IrisProtocol</title>
+    <title>Terminal Interface</title>
+    <style>
+        body {
+            background-color: #1e1e1e; /* Dark background */
+            color: #00ff00; /* Green text */
+            font-family: 'Courier New', Courier, monospace; /* Monospace font for terminal effect */
+            padding: 20px;
+            margin: 0;
+            height: 100vh;
+            overflow: hidden;
+        }
+        .terminal {
+            border: 1px solid #00ff00; /* Green border */
+            padding: 10px;
+            height: 80%;
+            overflow-y: auto; /* Allow scrolling */
+        }
+        .prompt {
+            display: inline; /* Keep the prompt inline */
+        }
+        a {
+            color: #00ff00; /* Link color */
+            text-decoration: none; /* Remove underline */
+        }
+        a:hover {
+            text-decoration: underline; /* Underline on hover */
+        }
+    </style>
 </head>
 <body>
-    <h1>Security Layers</h1>
-    <a href="layer1.html">Proceed to Layer 1</a>
+    <div class="terminal">
+        <p>Iris Terminal</p>
+        <p>Type '<span class="prompt">proceed</span>' to continue to Layer 1:</p>
+        <p>
+            <span class="prompt">user@securelayers:~$</span> 
+            <a href="layer1.html">proceed</a>
+        </p>
+    </div>
 </body>
 </html>
