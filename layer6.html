@@ -58,6 +58,7 @@
         const expectedSecondaryPassword = "87fg@2$0"; // Example of a second password
         const expectedHandImageSrc = "expected_hand_image.jpeg"; // Path to the expected hand image
 
+        // Function to verify the primary and secondary passwords
         function verifyPasswords() {
             const primaryPassword = document.getElementById("password").value;
             const secondaryPassword = document.getElementById("secondaryPassword").value;
@@ -68,6 +69,7 @@
             }
         }
 
+        // Function to start the webcam for image capture
         function startCamera() {
             const video = document.getElementById("video");
             const constraints = {
@@ -85,6 +87,7 @@
                 });
         }
 
+        // Function to capture an image from the webcam
         function captureImage() {
             const video = document.getElementById("video");
             const canvas = document.createElement("canvas");
@@ -98,6 +101,7 @@
             verifyImage(capturedImageSrc);
         }
 
+        // Function to handle the file upload of an image
         function uploadImage(event) {
             const file = event.target.files[0];
             const reader = new FileReader();
@@ -106,16 +110,16 @@
                 const uploadedImageSrc = e.target.result;
                 verifyImage(uploadedImageSrc);
             };
+
+            reader.readAsDataURL(file);
         }
 
+        // Function to compare the captured/uploaded image with the expected image
         function verifyImage(capturedImageSrc) {
-            // Simulate image verification with variability considerations
+            // Simulate image verification (comparing the base64 image strings)
             const resultMessage = document.getElementById("resultMessage");
 
-            // Simulated condition for success/failure based on variability
-            const isSimilar = Math.random() < 0.8; // Simulating variability handling (80% similarity)
-
-            if (isSimilar) {
+            if (compareImages(capturedImageSrc, expectedHandImageSrc)) {
                 alert("Image verified!");
                 document.getElementById("thirdPasswordContainer").style.display = "block"; // Show third password input
             } else {
@@ -123,6 +127,13 @@
             }
         }
 
+        // Simulated image comparison function (to be replaced with a real verification method)
+        function compareImages(image1, image2) {
+            // In a real application, you would compare images using pixel comparison, hashing, or machine learning
+            return image1 === image2; // Basic comparison of base64 strings
+        }
+
+        // Function to verify the third password
         function verifyThirdPassword() {
             const thirdPassword = document.getElementById("thirdPassword").value;
             // Example of a third password
@@ -159,7 +170,7 @@
             <input type="password" id="thirdPassword" placeholder="Enter Password">
             <button onclick="verifyThirdPassword()">Submit Password</button>
         </div>
-        <input type="file" id="imageInput" accept="image/*" onchange="uploadImage(event)">
+        
         <div id="resultMessage"></div>
     </div>
 </body>
