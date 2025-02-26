@@ -42,8 +42,9 @@
         }
     </style>
     <script>
-        const expectedImageSrc = "expected_eye_image.jpeg"; // Path to the expected image
+        const expectedImageSrc = "expected_eye_image.jpeg"; // Path to the expected reference image (to be compared with)
 
+        // Function to start the webcam
         function startCamera() {
             const video = document.getElementById("video");
             const constraints = {
@@ -61,6 +62,7 @@
                 });
         }
 
+        // Function to capture an image from the webcam
         function captureImage() {
             const video = document.getElementById("video");
             const canvas = document.createElement("canvas");
@@ -74,6 +76,7 @@
             verifyImage(capturedImageSrc);
         }
 
+        // Function to handle image file upload
         function uploadImage(event) {
             const file = event.target.files[0];
             const reader = new FileReader();
@@ -86,19 +89,25 @@
             reader.readAsDataURL(file);
         }
 
+        // Function to verify the image
         function verifyImage(capturedImageSrc) {
-            // Simulate image verification with variability considerations
+            // Simulate image verification by comparing base64 encoded images
             const resultMessage = document.getElementById("resultMessage");
 
-            // Simulated condition for success/failure based on variability
-            const isSimilar = Math.random() < 0.8; // Simulating variability handling (80% similarity)
-
-            if (isSimilar) {
+            // Compare the base64 string (simulating real image verification)
+            if (compareImages(capturedImageSrc, expectedImageSrc)) {
                 alert("Image verified! Redirecting to Layer 6.");
                 window.location.href = "layer6.html"; // Redirect to Layer 6 on success
             } else {
                 resultMessage.innerText = "Image verification failed. Please try again.";
             }
+        }
+
+        // Simulated comparison function (you would replace this with a real image comparison algorithm)
+        function compareImages(image1, image2) {
+            // In a real implementation, you'd compare images using something like the Hamming distance, SSIM, or an external API
+            // For now, we're simply comparing the base64 strings directly
+            return image1 === image2;
         }
     </script>
 </head>
