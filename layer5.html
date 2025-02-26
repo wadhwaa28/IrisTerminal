@@ -6,108 +6,92 @@
     <title>Layer 5 - Terminal</title>
     <style>
         body {
-            background-color: #1e1e1e; /* Dark background */
-            color: #00ff00; /* Green text */
-            font-family: 'Courier New', Courier, monospace; /* Monospace font */
+            background-color: #1e1e1e;
+            color: #00ff00;
+            font-family: 'Courier New', Courier, monospace;
             padding: 20px;
             margin: 0;
             height: 100vh;
             overflow: hidden;
         }
         .terminal {
-            border: 1px solid #00ff00; /* Green border */
+            border: 1px solid #00ff00;
             padding: 10px;
             height: auto;
-            max-height: 80%; /* Limit height for scrolling */
-            overflow-y: auto; /* Allow scrolling */
+            max-height: 80%;
+            overflow-y: auto;
         }
         button {
-            background-color: #00ff00; /* Green button */
-            color: #1e1e1e; /* Dark text */
-            border: none; /* No border */
+            background-color: #00ff00;
+            color: #1e1e1e;
+            border: none;
             padding: 10px 20px;
-            cursor: pointer; /* Pointer cursor */
-            font-size: 16px; /* Increased font size */
+            cursor: pointer;
+            font-size: 16px;
         }
         button:hover {
-            background-color: #007700; /* Darken button on hover */
+            background-color: #007700;
         }
         #video {
-            display: none; /* Hide video initially */
-            width: 100%; /* Full width */
-            border: 1px solid #00ff00; /* Green border */
+            display: none;
+            width: 100%;
+            border: 1px solid #00ff00;
         }
         #resultMessage {
-            margin-top: 10px; /* Space above result message */
+            margin-top: 10px;
         }
     </style>
     <script>
-        const expectedImageSrc = "expected_eye_image.jpeg"; // Path to the expected reference image (to be compared with)
-
-        // Function to start the webcam
         function startCamera() {
             const video = document.getElementById("video");
-            const constraints = {
-                video: true
-            };
-
-            navigator.mediaDevices.getUserMedia(constraints)
-                .then((stream) => {
+            navigator.mediaDevices.getUserMedia({ video: true })
+                .then(stream => {
                     video.srcObject = stream;
-                    video.style.display = "block"; // Show video
+                    video.style.display = "block";
                     video.play();
                 })
-                .catch((error) => {
-                    alert("Unable to access the camera. Please check your permissions.");
-                });
+                .catch(error => alert("Unable to access the camera. Check your permissions."));
         }
 
-        // Function to capture an image from the webcam
         function captureImage() {
             const video = document.getElementById("video");
             const canvas = document.createElement("canvas");
             canvas.width = video.videoWidth;
             canvas.height = video.videoHeight;
-
             const context = canvas.getContext("2d");
             context.drawImage(video, 0, 0, canvas.width, canvas.height);
 
-            const capturedImageSrc = canvas.toDataURL("image/png");
-            verifyImage(capturedImageSrc);
+            const capturedImage = canvas.toDataURL("image/png");
+            sendImageToServer(capturedImage);
         }
 
-        // Function to handle image file upload
         function uploadImage(event) {
             const file = event.target.files[0];
             const reader = new FileReader();
 
             reader.onload = function (e) {
-                const uploadedImageSrc = e.target.result;
-                verifyImage(uploadedImageSrc);
+                sendImageToServer(e.target.result);
             };
 
             reader.readAsDataURL(file);
         }
 
-        // Function to verify the image
-        function verifyImage(capturedImageSrc) {
-            // Simulate image verification by comparing base64 encoded images
-            const resultMessage = document.getElementById("resultMessage");
-
-            // Compare the base64 string (simulating real image verification)
-            if (compareImages(capturedImageSrc, expectedImageSrc)) {
-                alert("Image verified! Redirecting to Layer 6.");
-                window.location.href = "layer6.html"; // Redirect to Layer 6 on success
-            } else {
-                resultMessage.innerText = "Image verification failed. Please try again.";
-            }
-        }
-
-        // Simulated comparison function (you would replace this with a real image comparison algorithm)
-        function compareImages(image1, image2) {
-            // In a real implementation, you'd compare images using something like the Hamming distance, SSIM, or an external API
-            // For now, we're simply comparing the base64 strings directly
-            return image1 === image2;
+        function sendImageToServer(imageData) {
+            fetch("http://localhost:5000/compare", {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify({ image: imageData })
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.match) {
+                    alert("Image verified! Redirecting to Layer 6.");
+                    window.location.href = "layer6.html";
+                } else {
+                    document.getElementById("resultMessage").innerText = "Image verification failed. Please try again.";
+                }
+            })
+            .catch(error => console.error("Error:", error));
         }
     </script>
 </head>
@@ -115,15 +99,11 @@
     <div class="terminal">
         <h1>Layer 5</h1>
         <p>Eye Scan Authentication Required</p>
-        
         <span>user@securelayers:~$</span>
         <button onclick="startCamera()">Start Webcam</button>
         <button onclick="captureImage()">Capture Image</button>
-        
         <p>OR</p>
-        
         <input type="file" id="imageInput" accept="image/*" onchange="uploadImage(event)">
-        
         <video id="video"></video>
         <div id="resultMessage"></div>
     </div>
