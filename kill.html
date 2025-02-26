@@ -4,7 +4,6 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Terminal</title>
-</head>
     <style>
         body {
             background-color: #1e1e1e; /* Dark background */
@@ -17,17 +16,36 @@
         }
         .terminal {
             border: 1px solid #00ff00; /* Green border */
-            padding: 10px;
+            padding: 20px;
             height: 80%;
+            max-height: 80%;
             overflow-y: auto; /* Allow scrolling */
+            background-color: #2d2d2d; /* Darker background for terminal window */
+            position: relative;
         }
-        input {
+        .terminal h1 {
+            font-size: 20px;
+            margin: 0;
+        }
+        .prompt {
+            color: #00ff00;
+            font-weight: bold;
+        }
+        .terminal-input {
             background-color: #1e1e1e; /* Match background */
             color: #00ff00; /* Green text */
             border: none; /* No border */
             border-bottom: 1px solid #00ff00; /* Underline effect */
             outline: none; /* Remove outline */
-            margin-right: 5px; /* Space between inputs */
+            margin-top: 5px;
+            font-size: 18px;
+            width: 100%;
+            padding: 5px;
+        }
+        .terminal-output {
+            margin-top: 10px;
+            font-size: 16px;
+            color: #00ff00;
         }
         button {
             background-color: #00ff00; /* Green button */
@@ -35,6 +53,8 @@
             border: none; /* No border */
             padding: 5px 10px;
             cursor: pointer; /* Pointer cursor */
+            margin-top: 10px;
+            font-size: 14px;
         }
         button:hover {
             background-color: #007700; /* Darken button on hover */
@@ -43,38 +63,79 @@
             display: none;
             margin-top: 20px;
         }
-    </style>
-    <script>
-    function checkTerminalValue() {
-    const terminalValue = document.getElementById("input").value;
-        if (terminalValue == "sys check --name") {
-            alert("$%~IrisAI~$%");
-        } else if (terminalValue == "sys exe --shutdown") {
-            document.getElementById("shutdown").style.display = "block";
-        } else {
-            alert("No terminal function");
+        .hidden {
+            display: none;
         }
-    }
-    </script>
+    </style>
+</head>
 <body>
     <div class="terminal">
-    <h1>Terminal</h1>
+        <h1>Terminal</h1>
+        <div class="terminal-output" id="output"></div>
         <span class="prompt">user@securelayers:~$</span>
-        <input type="password" id="input" placeholder="Enter command">
+        <input type="password" id="input" class="terminal-input" placeholder="Enter command">
         <button onclick="checkTerminalValue()">Submit</button>
-        <div id="shutdown">
+
+        <div id="shutdown" class="hidden">
             <button id="killButton">SHUTDOWN</button>
             <audio id="alertSound" src="iris_shutdown.mp3"></audio>
         </div>
+    </div>
+
     <script>
+        // Log output area
+        function logToTerminal(message) {
+            const outputDiv = document.getElementById("output");
+            outputDiv.innerHTML += message + "<br>";
+            outputDiv.scrollTop = outputDiv.scrollHeight; // Scroll to the latest log
+        }
+
+        // Handle terminal command input
+        function checkTerminalValue() {
+            const terminalValue = document.getElementById("input").value;
+            const outputDiv = document.getElementById("output");
+            outputDiv.innerHTML = '';  // Clear output
+
+            if (terminalValue == "sys check --name") {
+                logToTerminal("$%~IrisAI~$%");
+            } else if (terminalValue == "sys exe --shutdown") {
+                logToTerminal("System shutting down...");
+                document.getElementById("shutdown").classList.remove("hidden"); // Show shutdown button
+            } else {
+                logToTerminal("No terminal function");
+            }
+
+            // Clear the input after the command has been processed
+            document.getElementById("input").value = "";
+        }
+
+        // Handle shutdown button click
         document.getElementById("killButton").onclick = function() {
             var audio = document.getElementById("alertSound");
             audio.play();
             setTimeout(function() {
                 window.location.href = "about:blank"; // Redirect to blank page
-            }, 100); // Wait for 10 seconds
+            }, 100); // Wait for 100ms before redirecting
+        };
+
+        // Simulate typing effect for terminal command input
+        function simulateTypingEffect(inputString) {
+            let i = 0;
+            const inputField = document.getElementById("input");
+            inputField.value = ""; // Reset the input field
+            const typingInterval = setInterval(function() {
+                inputField.value += inputString[i];
+                i++;
+                if (i === inputString.length) {
+                    clearInterval(typingInterval);
+                }
+            }, 100); // Simulate typing at 100ms intervals
+        }
+
+        // Optional: Simulate typing a command when the page loads
+        window.onload = function() {
+            simulateTypingEffect("sys check --name");
         };
     </script>
-    </div>
 </body>
 </html>
