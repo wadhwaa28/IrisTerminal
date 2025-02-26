@@ -9,7 +9,7 @@ from skimage.metrics import structural_similarity as ssim
 app = Flask(__name__)
 
 # Load the reference image (expected eye image)
-reference_image_path = "static/expected_eye_image.jpeg"
+reference_image_path = "expected_eye_image.jpeg"
 reference_image = cv2.imread(reference_image_path, cv2.IMREAD_GRAYSCALE)
 
 def decode_image(image_data):
