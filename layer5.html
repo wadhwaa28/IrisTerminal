@@ -6,17 +6,20 @@
     <title>Layer 5 - Terminal</title>
     <style>
         body {
-            background-color: #1e1e1e;
-            color: #00ff00;
+            background-color: #1e1e1e; /* Dark background */
+            color: #00ff00; /* Green text */
             font-family: 'Courier New', Courier, monospace;
             padding: 20px;
             margin: 0;
             height: 100vh;
             overflow: hidden;
+            text-align: center;
         }
         .terminal {
             border: 1px solid #00ff00;
             padding: 10px;
+            max-width: 600px;
+            margin: auto;
             height: auto;
             max-height: 80%;
             overflow-y: auto;
@@ -28,6 +31,7 @@
             padding: 10px 20px;
             cursor: pointer;
             font-size: 16px;
+            margin: 5px;
         }
         button:hover {
             background-color: #007700;
@@ -40,17 +44,35 @@
         #resultMessage {
             margin-top: 10px;
         }
+        /* Fake loading animation */
+        .loading {
+            display: none;
+            font-size: 18px;
+            color: #00ff00;
+            margin-top: 10px;
+        }
+        .dot {
+            animation: blink 1.5s infinite;
+        }
+        .dot:nth-child(2) { animation-delay: 0.3s; }
+        .dot:nth-child(3) { animation-delay: 0.6s; }
+        @keyframes blink {
+            0%, 100% { opacity: 0; }
+            50% { opacity: 1; }
+        }
     </style>
     <script>
         function startCamera() {
             const video = document.getElementById("video");
             navigator.mediaDevices.getUserMedia({ video: true })
-                .then(stream => {
+                .then((stream) => {
                     video.srcObject = stream;
-                    video.style.display = "block";
+                    video.style.display = "block"; // Show video
                     video.play();
                 })
-                .catch(error => alert("Unable to access the camera. Check your permissions."));
+                .catch(() => {
+                    alert("Unable to access the camera. Please check your permissions.");
+                });
         }
 
         function captureImage() {
@@ -61,8 +83,11 @@
             const context = canvas.getContext("2d");
             context.drawImage(video, 0, 0, canvas.width, canvas.height);
 
-            const capturedImage = canvas.toDataURL("image/png");
-            sendImageToServer(capturedImage);
+            // Convert captured image to Base64 (not used in verification)
+            const capturedImageSrc = canvas.toDataURL("image/png");
+
+            // Show fake loading before "verification"
+            showLoading(() => verifyImage(capturedImageSrc));
         }
 
         function uploadImage(event) {
@@ -70,28 +95,28 @@
             const reader = new FileReader();
 
             reader.onload = function (e) {
-                sendImageToServer(e.target.result);
+                const uploadedImageSrc = e.target.result;
+
+                // Show fake loading before "verification"
+                showLoading(() => verifyImage(uploadedImageSrc));
             };
 
             reader.readAsDataURL(file);
         }
 
-        function sendImageToServer(imageData) {
-            fetch("http://localhost:5000/compare", {
-                method: "POST",
-                headers: { "Content-Type": "application/json" },
-                body: JSON.stringify({ image: imageData })
-            })
-            .then(response => response.json())
-            .then(data => {
-                if (data.match) {
-                    alert("Image verified! Redirecting to Layer 6.");
-                    window.location.href = "layer6.html";
-                } else {
-                    document.getElementById("resultMessage").innerText = "Image verification failed. Please try again.";
-                }
-            })
-            .catch(error => console.error("Error:", error));
+        function showLoading(callback) {
+            const loadingText = document.getElementById("loading");
+            loadingText.style.display = "block"; // Show loading text
+
+            setTimeout(() => {
+                loadingText.style.display = "none"; // Hide after delay
+                callback();
+            }, 3000); // Simulate a 3-second verification process
+        }
+
+        function verifyImage(imageSrc) {
+            alert("Image verified! Redirecting to Layer 6.");
+            window.location.href = "layer6.html"; // Redirect to Layer 6
         }
     </script>
 </head>
@@ -99,12 +124,17 @@
     <div class="terminal">
         <h1>Layer 5</h1>
         <p>Eye Scan Authentication Required</p>
+        
         <span>user@securelayers:~$</span>
         <button onclick="startCamera()">Start Webcam</button>
         <button onclick="captureImage()">Capture Image</button>
+        
         <p>OR</p>
+        
         <input type="file" id="imageInput" accept="image/*" onchange="uploadImage(event)">
+        
         <video id="video"></video>
+        <p id="loading" class="loading">Verifying image<span class="dot">.</span><span class="dot">.</span><span class="dot">.</span></p>
         <div id="resultMessage"></div>
     </div>
 </body>
