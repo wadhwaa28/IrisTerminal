@@ -6,140 +6,142 @@
     <title>Layer 6 - Terminal</title>
     <style>
         body {
-            background-color: #1e1e1e; /* Dark background */
-            color: #00ff00; /* Green text */
-            font-family: 'Courier New', Courier, monospace; /* Monospace font */
+            background-color: #1e1e1e; 
+            color: #00ff00;
+            font-family: 'Courier New', Courier, monospace;
             padding: 20px;
             margin: 0;
             height: 100vh;
             overflow: hidden;
+            text-align: center;
         }
         .terminal {
-            border: 1px solid #00ff00; /* Green border */
+            border: 1px solid #00ff00;
             padding: 10px;
+            max-width: 600px;
+            margin: auto;
             height: auto;
-            max-height: 80%; /* Limit height for scrolling */
-            overflow-y: auto; /* Allow scrolling */
+            max-height: 80%;
+            overflow-y: auto;
         }
         button {
-            background-color: #00ff00; /* Green button */
-            color: #1e1e1e; /* Dark text */
-            border: none; /* No border */
+            background-color: #00ff00;
+            color: #1e1e1e;
+            border: none;
             padding: 10px 20px;
-            cursor: pointer; /* Pointer cursor */
-            font-size: 16px; /* Increased font size */
+            cursor: pointer;
+            font-size: 16px;
+            margin: 5px;
         }
         button:hover {
-            background-color: #007700; /* Darken button on hover */
+            background-color: #007700;
         }
         input {
-            background-color: #1e1e1e; /* Match background */
-            color: #00ff00; /* Green text */
-            border: none; /* No border */
-            border-bottom: 1px solid #00ff00; /* Underline effect */
-            outline: none; /* Remove outline */
-            margin: 5px 0; /* Space above and below */
+            background-color: #1e1e1e;
+            color: #00ff00;
+            border: none;
+            border-bottom: 1px solid #00ff00;
+            outline: none;
+            margin: 5px 0;
         }
         #biometricContainer, #thirdPasswordContainer {
-            display: none; /* Hide sections initially */
+            display: none;
             margin-top: 10px;
         }
         #video {
-            display: none; /* Hide video initially */
-            width: 100%; /* Full width */
-            border: 1px solid #00ff00; /* Green border */
+            display: none;
+            width: 100%;
+            border: 1px solid #00ff00;
         }
-        #resultMessage {
-            margin-top: 10px; /* Space above result message */
+        /* Fake loading animation */
+        .loading {
+            display: none;
+            font-size: 18px;
+            color: #00ff00;
+            margin-top: 10px;
+        }
+        .dot {
+            animation: blink 1.5s infinite;
+        }
+        .dot:nth-child(2) { animation-delay: 0.3s; }
+        .dot:nth-child(3) { animation-delay: 0.6s; }
+        @keyframes blink {
+            0%, 100% { opacity: 0; }
+            50% { opacity: 1; }
         }
     </style>
     <script>
-        const expectedPassword = "@3e5ghK9"; // Example of a complex password
-        const expectedSecondaryPassword = "87fg@2$0"; // Example of a second password
-        const expectedHandImageSrc = "expected_hand_image.jpeg"; // Path to the expected hand image
+        const expectedPassword = "@3e5ghK9"; 
+        const expectedSecondaryPassword = "87fg@2$0"; 
+        const thirdPassword = "D%T7ygU2$"; 
 
-        // Function to verify the primary and secondary passwords
         function verifyPasswords() {
             const primaryPassword = document.getElementById("password").value;
             const secondaryPassword = document.getElementById("secondaryPassword").value;
             if (primaryPassword === expectedPassword && secondaryPassword === expectedSecondaryPassword) {
-                document.getElementById("biometricContainer").style.display = "block"; // Show biometric options
+                document.getElementById("biometricContainer").style.display = "block";
             } else {
                 alert("Incorrect primary or secondary password. Please try again.");
             }
         }
 
-        // Function to start the webcam for image capture
         function startCamera() {
             const video = document.getElementById("video");
-            const constraints = {
-                video: true
-            };
-
-            navigator.mediaDevices.getUserMedia(constraints)
+            navigator.mediaDevices.getUserMedia({ video: true })
                 .then((stream) => {
                     video.srcObject = stream;
-                    video.style.display = "block"; // Show video
+                    video.style.display = "block";
                     video.play();
                 })
-                .catch((error) => {
+                .catch(() => {
                     alert("Unable to access the camera. Please check your permissions.");
                 });
         }
 
-        // Function to capture an image from the webcam
         function captureImage() {
             const video = document.getElementById("video");
             const canvas = document.createElement("canvas");
             canvas.width = video.videoWidth;
             canvas.height = video.videoHeight;
-
             const context = canvas.getContext("2d");
             context.drawImage(video, 0, 0, canvas.width, canvas.height);
-
             const capturedImageSrc = canvas.toDataURL("image/png");
-            verifyImage(capturedImageSrc);
+
+            showLoading(() => verifyImage(capturedImageSrc));
         }
 
-        // Function to handle the file upload of an image
         function uploadImage(event) {
             const file = event.target.files[0];
             const reader = new FileReader();
 
             reader.onload = function (e) {
                 const uploadedImageSrc = e.target.result;
-                verifyImage(uploadedImageSrc);
+                showLoading(() => verifyImage(uploadedImageSrc));
             };
 
             reader.readAsDataURL(file);
         }
 
-        // Function to compare the captured/uploaded image with the expected image
-        function verifyImage(capturedImageSrc) {
-            // Simulate image verification (comparing the base64 image strings)
-            const resultMessage = document.getElementById("resultMessage");
+        function showLoading(callback) {
+            const loadingText = document.getElementById("loading");
+            loadingText.style.display = "block"; 
 
-            if (compareImages(capturedImageSrc, expectedHandImageSrc)) {
-                alert("Image verified!");
-                document.getElementById("thirdPasswordContainer").style.display = "block"; // Show third password input
-            } else {
-                resultMessage.innerText = "Image verification failed. Please try again.";
-            }
+            setTimeout(() => {
+                loadingText.style.display = "none"; 
+                callback();
+            }, 3000); 
         }
 
-        // Simulated image comparison function (to be replaced with a real verification method)
-        function compareImages(image1, image2) {
-            // In a real application, you would compare images using pixel comparison, hashing, or machine learning
-            return image1 === image2; // Basic comparison of base64 strings
+        function verifyImage(imageSrc) {
+            alert("Image verified!");
+            document.getElementById("thirdPasswordContainer").style.display = "block"; 
         }
 
-        // Function to verify the third password
         function verifyThirdPassword() {
-            const thirdPassword = document.getElementById("thirdPassword").value;
-            // Example of a third password
-            if (thirdPassword === "D%T7ygU2$") { 
+            const enteredPassword = document.getElementById("thirdPassword").value;
+            if (enteredPassword === thirdPassword) { 
                 alert("Access Granted");
-                window.location.href = "kill.html"; // Redirect to kill.html
+                window.location.href = "kill.html"; 
             } else {
                 alert("Incorrect final password. Please try again.");
             }
@@ -163,6 +165,7 @@
             <input type="file" id="imageInput" accept="image/*" onchange="uploadImage(event)" style="display:none;">
             <button onclick="captureImage()">Capture Image</button>
             <video id="video"></video>
+            <p id="loading" class="loading">Verifying image<span class="dot">.</span><span class="dot">.</span><span class="dot">.</span></p>
         </div>
 
         <div id="thirdPasswordContainer">
